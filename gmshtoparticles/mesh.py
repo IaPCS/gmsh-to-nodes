@@ -7,8 +7,6 @@ import meshio
 import numpy as np
 import os
 import vtk
-import pdb
-
 
 class GmshToParticles():
     
@@ -24,12 +22,14 @@ class GmshToParticles():
         if element_type == "triangle":
             csv_output = output + ".csv"
             self.textFile_triangle(csv_output)
+            print ".csv output file written at", csv_output  
         elif element_type == "quad":
             csv_output = output + ".csv"
             self.textFile_square(csv_output)
+            print ".csv output file written at", csv_output  
         else:
             print "Supported element_type are triangle or quad"
-        print ".csv output file written at", csv_output   
+         
             
         vtk_output = output + ".vtk"
         self.vtkFile(vtk_output, element_type)
@@ -122,8 +122,5 @@ class GmshToParticles():
         writer.GetCompressor().SetCompressionLevel(0)
         writer.SetDataModeToAscii()
         writer.Write()
-
-    
-
 
 

@@ -10,10 +10,13 @@ import vtk
 
 class GmshToParticles():
     
-    def __init__(self, element_type = 'triangle', mesh_input = 'input.msh', output = 'output'):
+    def __init__(self, element_type = 'triangle', mesh_input = 'input.msh', output = 'output',norm=0):
         self.points, self.cells, point_data, cell_data, field_data = \
         meshio.read(mesh_input)
         print "Successfully opened input mesh file"        
+        
+        if norm == 1:
+            self.normalize()
         
         vtu_output = output + ".vtu"
         meshio.write(vtu_output, self.points, self.cells, cell_data=cell_data)
@@ -31,7 +34,7 @@ class GmshToParticles():
             print "Supported element_type are triangle or quad"
          
             
-        vtk_output = output + ".vtk"
+        vtk_output = output + ".vtu"
         self.vtkFile(vtk_output, element_type)
         print ".vtk output file written at", vtk_output
 
@@ -123,4 +126,14 @@ class GmshToParticles():
         writer.SetDataModeToAscii()
         writer.Write()
 
-
+    def normalize(self):
+        
+        minDirection = np.zeros((3))    
+        minDirection[0] = min(self.points[:,0])
+        minDirection[1] = min(self.points[:,1])
+        minDirection[2] = min(self.points[:,2])
+        
+        self.points += minDirection
+        
+        
+        

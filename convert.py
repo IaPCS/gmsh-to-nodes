@@ -7,14 +7,16 @@ def main(argv):
     path = ''
     output = ''
     outtype = ''
+    norm = 0
     helpText = "convert.py -i <inputfile> -o <outputfile> -t <type>\n"
-    if len(sys.argv) != 7:
+    print len(sys.argv)
+    if len(sys.argv) <= 4:
         print helpText
         sys.exit(1)
 
     try:
         opts, args = getopt.getopt(
-            argv, "hi:o:t:", ["ifile=", "ofile="])
+            argv, "hi:o:t:n:", ["ifile=", "ofile="])
     except getopt.GetoptError:
         print helpText
         sys.exit(0)
@@ -29,8 +31,11 @@ def main(argv):
             output = arg
         elif opt in ("-t", "--type"):
             outtype = arg
-            
-    mesh.GmshToParticles(outtype, path, output)
+        elif opt in ("-n", "--normalize"):
+            norm = int(arg) 
+               
+               
+    mesh.GmshToParticles(outtype, path, output,norm)
 
 if __name__ == "__main__":
     main(sys.argv[1:])    

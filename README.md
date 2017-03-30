@@ -1,6 +1,6 @@
 # gmsh-to-paticles
 
-Gnerates nodes and volumes from gmsh grid for nodal or particle simulations
+Generates nodes and volumes from gmsh grid for nodal or particle simulations
 
 # Install
 

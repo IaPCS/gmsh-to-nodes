@@ -9,7 +9,6 @@ def main(argv):
     outtype = ''
     norm = 0
     helpText = "convert.py -i <inputfile> -o <outputfile> -t <type>\n"
-    print len(sys.argv)
     if len(sys.argv) <= 4:
         print helpText
         sys.exit(1)

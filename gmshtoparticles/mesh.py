@@ -18,7 +18,7 @@ class GmshToParticles():
         if norm == 1:
             self.normalize()
         
-        vtu_output = output + ".vtu"
+        vtu_output = output + "_grid.vtu"
         meshio.write(vtu_output, self.points, self.cells, cell_data=cell_data)
         print ".vtu output file written at", vtu_output        
         
@@ -133,7 +133,7 @@ class GmshToParticles():
         minDirection[1] = min(self.points[:,1])
         minDirection[2] = min(self.points[:,2])
         
-        self.points += minDirection
+        self.points -= minDirection
         
         
         

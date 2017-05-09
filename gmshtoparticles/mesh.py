@@ -36,7 +36,7 @@ class GmshToParticles():
             
         vtk_output = output + ".vtu"
         self.vtkFile(vtk_output, element_type)
-        print ".vtk output file written at", vtk_output
+        print ".vtu output file written at", vtk_output
 
     def centerTriangle(self, node):
         x = self.points[node[0]]

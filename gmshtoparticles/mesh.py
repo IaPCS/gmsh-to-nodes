@@ -13,30 +13,30 @@ class GmshToParticles():
     def __init__(self, element_type = 'triangle', mesh_input = 'input.msh', output = 'output',norm=0):
         self.points, self.cells, point_data, cell_data, field_data = \
         meshio.read(mesh_input)
-        print "Successfully opened input mesh file"        
+        print("Successfully opened input mesh file" )       
         
         if norm == 1:
             self.normalize()
         
         vtu_output = output + "_grid.vtu"
         meshio.write(vtu_output, self.points, self.cells, cell_data=cell_data)
-        print ".vtu output file written at", vtu_output        
+        print(".vtu output file written at", vtu_output)        
         
         if element_type == "triangle":
             csv_output = output + ".csv"
             self.textFile_triangle(csv_output)
-            print ".csv output file written at", csv_output  
+            print(".csv output file written at", csv_output)  
         elif element_type == "quad":
             csv_output = output + ".csv"
             self.textFile_square(csv_output)
-            print ".csv output file written at", csv_output  
+            print (".csv output file written at", csv_output)  
         else:
-            print "Supported element_type are triangle or quad"
+            print ("Supported element_type are triangle or quad")
          
             
         vtk_output = output + ".vtu"
         self.vtkFile(vtk_output, element_type)
-        print ".vtu output file written at", vtk_output
+        print (".vtu output file written at", vtk_output)
 
     def centerTriangle(self, node):
         x = self.points[node[0]]

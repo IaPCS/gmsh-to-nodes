@@ -10,19 +10,19 @@ def main(argv):
     norm = 0
     helpText = "convert.py -i <inputfile> -o <outputfile> -t <type>\n"
     if len(sys.argv) <= 4:
-        print helpText
+        print(helpText)
         sys.exit(1)
 
     try:
         opts, args = getopt.getopt(
             argv, "hi:o:t:n:", ["ifile=", "ofile="])
     except getopt.GetoptError:
-        print helpText
+        print(helpText)
         sys.exit(0)
 
     for opt, arg in opts:
         if opt == '-h':
-            print helpText
+            print (helpText)
             sys.exit(0)
         elif opt in ("-i", "--ifile"):
             path = arg

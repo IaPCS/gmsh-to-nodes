@@ -71,7 +71,7 @@ class GmshToParticles():
             for node in self.cells['triangle']:
                 area = self.areaTriangle(node)
                 center = self.centerTriangle(node)
-                line = "{:d} {:.2e} {:.2e} {:.2e}".format(i ,center[0], center[1], area )
+                line = "{:d}, {:.2e}, {:.2e}, {:.2e}".format(i ,center[0], center[1], area )
                 file.write(line + os.linesep)
                 i += 1
             file.close()
@@ -84,7 +84,7 @@ class GmshToParticles():
             for node in self.cells['quad']:
                 area = self.areaSquare(node)
                 center = self.centerSquare(node)
-                line = "{:d} {:.2e} {:.2e} {:.2e}".format(i ,center[0], center[1], area )
+                line = "{:d}, {:.2e}, {:.2e}, {:.2e}".format(i ,center[0], center[1], area )
                 file.write(line + os.linesep)
                 i += 1
             file.close()

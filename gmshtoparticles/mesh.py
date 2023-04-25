@@ -11,15 +11,16 @@ import vtk
 class GmshToParticles():
     
     def __init__(self, element_type = 'triangle', mesh_input = 'input.msh', output = 'output',norm=0):
-        self.points, self.cells, point_data, cell_data, field_data = \
-        meshio.read(mesh_input)
+        mesh = meshio.read(mesh_input)
+        self.points = mesh.points
+        self.cells = mesh.cells
         print("Successfully opened input mesh file" )       
         
         if norm == 1:
             self.normalize()
         
         vtu_output = output + "_grid.vtu"
-        meshio.write(vtu_output, self.points, self.cells, cell_data=cell_data)
+        #meshio.write(vtu_output, self.points, self.cells, cell_data={"index": [np.arange(len(self.cells))}])
         print(".vtu output file written at", vtu_output)        
         
         if element_type == "triangle":

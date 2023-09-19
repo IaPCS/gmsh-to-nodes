@@ -81,39 +81,48 @@ class GmshToParticles():
         with open(outFile, "w") as file:
             file.write("#id x y vol\n")
             i = 0
-            for node in self.cells['quad']:
-                area = self.areaSquare(node)
-                center = self.centerSquare(node)
-                line = "{:d}, {:.2e}, {:.2e}, {:.2e}".format(i ,center[0], center[1], area )
-                file.write(line + os.linesep)
-                i += 1
+            for cell in self.cells:
+                if cell.type == "quad":
+                    for node in cell.data:
+                        area = self.areaSquare(node)
+                        center = self.centerSquare(node)
+                        line = "{:d}, {:.2e}, {:.2e}, {:.2e}".format(i ,center[0], center[1], area )
+                        file.write(line + os.linesep)
+                        i += 1
             file.close()
     
     #needs to be rewritten for square and triangle
     def vtkFile(self, outFile, type_ ):
+        number = 0
+        nodes = []
+        for cell in self.cells:
+            if cell.type == type_:
+                number = len(cell.data)
+                nodes = cell.data 
+
         writer = vtk.vtkXMLUnstructuredGridWriter()
         writer.SetFileName(outFile)
         grid = vtk.vtkUnstructuredGrid()
         points = vtk.vtkPoints()
-        points.SetNumberOfPoints(len(self.cells[type_]))
+        points.SetNumberOfPoints(number)
         points.SetDataTypeToDouble()
         dataOut = grid.GetPointData()
        
         array = vtk.vtkDoubleArray()
         array.SetName("Volume")
         array.SetNumberOfComponents(1)
-        array.SetNumberOfTuples(len(self.cells[type_]))
+        array.SetNumberOfTuples(number)
        
         if type_ == "triangle":
-            for i in range (0,len(self.cells[type_])):
-                center = self.centerTriangle(self.cells[type_][i])
-                area = self.areaTriangle(self.cells[type_][i])
+            for i in range (0,len(nodes)):
+                center = self.centerTriangle(nodes[i])
+                area = self.areaTriangle(node[i])
                 points.InsertPoint(i,center[0],center[1],0)
                 array.SetTuple1(i,area)
         elif type_ == "quad":
-            for i in range (0,len(self.cells[type_])):
-                center = self.centerSquare(self.cells[type_][i])
-                area = self.areaSquare(self.cells[type_][i])
+            for i in range (0,len(nodes)):
+                center = self.centerSquare(nodes[i])
+                area = self.areaSquare(nodes[i])
                 points.InsertPoint(i,center[0],center[1],0)
                 array.SetTuple1(i,area)
 

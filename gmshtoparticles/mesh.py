@@ -68,13 +68,15 @@ class GmshToParticles():
         with open(outFile, "w") as file:
             file.write("#id x y vol\n")
             i = 0
-            for node in self.cells['triangle']:
-                area = self.areaTriangle(node)
-                center = self.centerTriangle(node)
-                line = "{:d}, {:.2e}, {:.2e}, {:.2e}".format(i ,center[0], center[1], area )
-                file.write(line + os.linesep)
-                i += 1
-            file.close()
+            for cell in self.cells:
+                if cell.type == "triangle":
+                    for node in self.cells['triangle']:
+                        area = self.areaTriangle(node)
+                        center = self.centerTriangle(node)
+                        line = "{:d}, {:.2e}, {:.2e}, {:.2e}".format(i ,center[0], center[1], area )
+                        file.write(line + os.linesep)
+                        i += 1
+                file.close()
             
     #For now renamed function textfile_square
     def textFile_square(self, outFile):

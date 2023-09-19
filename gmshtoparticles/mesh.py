@@ -10,7 +10,7 @@ import vtk
 
 class GmshToParticles():
     
-    def __init__(self, element_type = 'triangle', mesh_input = 'input.msh', output = 'output',norm=0):
+    def __init__(self, element_type = 'triangle', mesh_input = 'input.msh', output = 'output', print_id = True, norm=0):
         mesh = meshio.read(mesh_input)
         self.points = mesh.points
         self.cells = mesh.cells
@@ -25,11 +25,11 @@ class GmshToParticles():
         
         if element_type == "triangle":
             csv_output = output + ".csv"
-            self.textFile_triangle(csv_output)
+            self.textFile_triangle(csv_output, print_id)
             print(".csv output file written at", csv_output)  
         elif element_type == "quad":
             csv_output = output + ".csv"
-            self.textFile_square(csv_output)
+            self.textFile_square(csv_output, print_id)
             print (".csv output file written at", csv_output)  
         else:
             print ("Supported element_type are triangle or quad")
@@ -64,31 +64,43 @@ class GmshToParticles():
         return np.linalg.norm(a*b)
     
     #For now renamed function textfile_triangle
-    def textFile_triangle(self, outFile):
+    def textFile_triangle(self, outFile, print_id):
         with open(outFile, "w") as file:
-            file.write("#id x y vol\n")
+            if print_id:
+                file.write("#id x y vol\n")
+            else:
+                file.write("#x y vol\n")
             i = 0
             for cell in self.cells:
                 if cell.type == "triangle":
                     for node in self.cells['triangle']:
                         area = self.areaTriangle(node)
                         center = self.centerTriangle(node)
-                        line = "{:d}, {:.2e}, {:.2e}, {:.2e}".format(i ,center[0], center[1], area )
+                        if print_id:
+                            line = "{:d}, {:.2e}, {:.2e}, {:.2e}".format(i ,center[0], center[1], area )
+                        else:
+                            line = "{:.2e}, {:.2e}, {:.2e}".format(center[0], center[1], area )
                         file.write(line + os.linesep)
                         i += 1
                 file.close()
             
     #For now renamed function textfile_square
-    def textFile_square(self, outFile):
+    def textFile_square(self, outFile, print_id):
         with open(outFile, "w") as file:
-            file.write("#id x y vol\n")
+            if print_id:
+                file.write("#id x y vol\n")
+            else:
+                file.write("#x y vol\n")
             i = 0
             for cell in self.cells:
                 if cell.type == "quad":
                     for node in cell.data:
                         area = self.areaSquare(node)
                         center = self.centerSquare(node)
-                        line = "{:d}, {:.2e}, {:.2e}, {:.2e}".format(i ,center[0], center[1], area )
+                        if print_id:
+                            line = "{:d}, {:.2e}, {:.2e}, {:.2e}".format(i ,center[0], center[1], area )
+                        else:
+                            line = "{:.2e}, {:.2e}, {:.2e}".format(center[0], center[1], area )
                         file.write(line + os.linesep)
                         i += 1
             file.close()

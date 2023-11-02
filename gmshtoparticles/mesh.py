@@ -73,7 +73,7 @@ class GmshToParticles():
             i = 0
             for cell in self.cells:
                 if cell.type == "triangle":
-                    for node in self.cells['triangle']:
+                    for node in cell.data:
                         area = self.areaTriangle(node)
                         center = self.centerTriangle(node)
                         if print_id:
@@ -82,7 +82,7 @@ class GmshToParticles():
                             line = "{:.2e}, {:.2e}, {:.2e}".format(center[0], center[1], area )
                         file.write(line + os.linesep)
                         i += 1
-                file.close()
+            file.close()
             
     #For now renamed function textfile_square
     def textFile_square(self, outFile, print_id):
@@ -130,7 +130,7 @@ class GmshToParticles():
         if type_ == "triangle":
             for i in range (0,len(nodes)):
                 center = self.centerTriangle(nodes[i])
-                area = self.areaTriangle(node[i])
+                area = self.areaTriangle(nodes[i])
                 points.InsertPoint(i,center[0],center[1],0)
                 array.SetTuple1(i,area)
         elif type_ == "quad":

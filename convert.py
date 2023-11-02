@@ -1,6 +1,6 @@
-from gmshtoparticles import mesh
 import sys
 import getopt
+from gmshtoparticles import mesh
 
 def main(argv):
         

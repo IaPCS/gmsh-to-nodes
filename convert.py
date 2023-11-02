@@ -1,4 +1,4 @@
-import gmshtoparticles.mesh as mesh
+from gmshtoparticles import mesh
 import sys
 import getopt
 

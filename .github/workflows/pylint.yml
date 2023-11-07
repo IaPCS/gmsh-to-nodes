@@ -20,6 +20,7 @@ jobs:
         pip install pylint
         pip install numpy
         pip install meshio
+        pip install setuptools
     - name: Analysing the code with pylint
       run: |
         pylint $(git ls-files '*.py')

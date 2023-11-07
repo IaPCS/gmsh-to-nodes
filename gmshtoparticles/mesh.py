@@ -3,9 +3,9 @@
 @author: me@diehlpk.de
 @author: ilyass.tabiai@gmail.com
 """
+import os
 import meshio
 import numpy as np
-import os
 import vtk
 
 
@@ -29,7 +29,6 @@ class GmshToParticles:
             self.normalize()
 
         vtu_output = output + "_grid.vtu"
-        # meshio.write(vtu_output, self.points, self.cells, cell_data={"index": [np.arange(len(self.cells))}])
         print(".vtu output file written at", vtu_output)
 
         if element_type == "triangle":
@@ -47,25 +46,25 @@ class GmshToParticles:
         self.vtkFile(vtk_output, element_type)
         print(".vtu output file written at", vtk_output)
 
-    def centerTriangle(self, node):
+    def center_triangle(self, node):
         x = self.points[node[0]]
         y = self.points[node[1]]
         z = self.points[node[2]]
         return np.array((x[0] + y[0] + z[0], x[1] + y[1] + z[1])) * (1.0 / 3.0)
 
-    def centerSquare(self, node):
+    def center_square(self, node):
         a = self.points[node[0]]
         b = self.points[node[1]]
         c = self.points[node[2]]
         d = self.points[node[3]]
         return np.array((a + b + c + d) / 4.0)
 
-    def areaTriangle(self, node):
+    def area_triangle(self, node):
         a = self.points[node[1]] - self.points[node[0]]
         b = self.points[node[2]] - self.points[node[0]]
         return np.linalg.norm(np.cross(a[:], b[:])) / 2.0
 
-    def areaSquare(self, node):
+    def area_square(self, node):
         a = self.points[node[1]] - self.points[node[0]]
         b = self.points[node[2]] - self.points[node[0]]
         return np.linalg.norm(a * b)
@@ -88,8 +87,8 @@ class GmshToParticles:
             for cell in self.cells:
                 if cell.type == "triangle":
                     for node in cell.data:
-                        area = self.areaTriangle(node)
-                        center = self.centerTriangle(node)
+                        area = self.area_triangle(node)
+                        center = self.center_triangle(node)
                         center = self.rotate(center)
 
                         if print_id:
@@ -115,8 +114,8 @@ class GmshToParticles:
             for cell in self.cells:
                 if cell.type == "quad":
                     for node in cell.data:
-                        area = self.areaSquare(node)
-                        center = self.centerSquare(node)
+                        area = self.area_square(node)
+                        center = self.center_square(node)
                         center = self.rotate(center)
 
                         if print_id:
@@ -155,16 +154,16 @@ class GmshToParticles:
 
         if type_ == "triangle":
             for i in range(0, len(nodes)):
-                center = self.centerTriangle(nodes[i])
+                center = self.center_triangle(nodes[i])
                 center = self.rotate(center)
-                area = self.areaTriangle(nodes[i])
+                area = self.area_triangle(nodes[i])
                 points.InsertPoint(i, center[0], center[1], 0)
                 array.SetTuple1(i, area)
         elif type_ == "quad":
             for i in range(0, len(nodes)):
-                center = self.centerSquare(nodes[i])
+                center = self.center_square(nodes[i])
                 center = self.rotate(center)
-                area = self.areaSquare(nodes[i])
+                area = self.area_square(nodes[i])
                 points.InsertPoint(i, center[0], center[1], 0)
                 array.SetTuple1(i, area)
 
@@ -178,9 +177,9 @@ class GmshToParticles:
         writer.Write()
 
     def normalize(self):
-        minDirection = np.zeros((3))
-        minDirection[0] = min(self.points[:, 0])
-        minDirection[1] = min(self.points[:, 1])
-        minDirection[2] = min(self.points[:, 2])
+        min_direction = np.zeros((3))
+        min_direction[0] = min(self.points[:, 0])
+        min_direction[1] = min(self.points[:, 1])
+        min_direction[2] = min(self.points[:, 2])
 
-        self.points -= minDirection
+        self.points -= min_direction

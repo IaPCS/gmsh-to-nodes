@@ -33,11 +33,11 @@ class GmshToParticles:
 
         if element_type == "triangle":
             csv_output = output + ".csv"
-            self.textFile_triangle(csv_output, print_id)
+            self.text_file_triangle(csv_output, print_id)
             print(".csv output file written at", csv_output)
         elif element_type == "quad":
             csv_output = output + ".csv"
-            self.textFile_square(csv_output, print_id)
+            self.text_file_square(csv_output, print_id)
             print(".csv output file written at", csv_output)
         else:
             print("Supported element_type are triangle or quad")
@@ -71,13 +71,13 @@ class GmshToParticles:
 
     def rotate(self, node):
         rad = self.angle * np.pi / 180
-        rotatingMatrix = np.array(
+        rotating_matrix = np.array(
             [[np.cos(rad), -np.sin(rad)], [np.sin(rad), np.cos(rad)]]
         )
-        return np.array(rotatingMatrix.dot(np.array(node)))
+        return np.array(rotating_matrix.dot(np.array(node)))
 
-    # For now renamed function textfile_triangle
-    def textFile_triangle(self, out_file, print_id):
+    # For now renamed function text_file_triangle
+    def text_file_triangle(self, out_file, print_id):
         with open(out_file, "w") as file:
             if print_id:
                 file.write("#id x y vol\n")
@@ -103,8 +103,8 @@ class GmshToParticles:
                         i += 1
             file.close()
 
-    # For now renamed function textfile_square
-    def textFile_square(self, out_file, print_id):
+    # For now renamed function text_file_square
+    def text_file_square(self, out_file, print_id):
         with open(out_file, "w") as file:
             if print_id:
                 file.write("#id x y vol\n")

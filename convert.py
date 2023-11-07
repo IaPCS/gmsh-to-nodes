@@ -1,8 +1,9 @@
+"""This module converts msh file to vtu and csv files."""
 import sys
 import getopt
 from gmshtoparticles import mesh
 
-"""This module converts msh file to vtu and csv files."""
+"""Main function to parse the arguments and call the functionality."""
 def main(argv):
     path = ""
     output = ""
@@ -23,7 +24,7 @@ def main(argv):
 
     for opt, arg in opts:
         if opt == "-h":
-            print(helpText)
+            print(help_text)
             sys.exit(0)
         elif opt in ("-i", "--ifile"):
             path = arg
@@ -40,6 +41,5 @@ def main(argv):
 
     mesh.GmshToParticles(outtype, path, output, print_id, norm, rotate)
 
-"""Main function"""
 if __name__ == "__main__":
     main(sys.argv[1:])

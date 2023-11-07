@@ -2,7 +2,7 @@ import sys
 import getopt
 from gmshtoparticles import mesh
 
-
+"""This module converts msh file to vtu and csv files."""
 def main(argv):
     path = ""
     output = ""
@@ -10,15 +10,15 @@ def main(argv):
     norm = 0
     print_id = True
     rotate = 0
-    helpText = "convert.py -i <inputfile> -o <outputfile> -t <type>\n"
+    help_text = "convert.py -i <inputfile> -o <outputfile> -t <type>\n"
     if len(sys.argv) <= 4:
-        print(helpText)
+        print(help_text)
         sys.exit(1)
 
     try:
         opts, args = getopt.getopt(argv, "hi:o:t:n:d:r:", ["ifile=", "ofile="])
     except getopt.GetoptError:
-        print(helpText)
+        print(help_text)
         sys.exit(0)
 
     for opt, arg in opts:
@@ -40,6 +40,6 @@ def main(argv):
 
     mesh.GmshToParticles(outtype, path, output, print_id, norm, rotate)
 
-
+"""Main function"""
 if __name__ == "__main__":
     main(sys.argv[1:])

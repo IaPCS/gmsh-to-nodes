@@ -1,5 +1,5 @@
+""" Setup of the module """
 from setuptools import setup
-
 
 setup(
     name="gmshtoparticles",

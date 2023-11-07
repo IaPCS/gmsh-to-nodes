@@ -3,8 +3,8 @@ import sys
 import getopt
 from gmshtoparticles import mesh
 
-"""Main function to parse the arguments and call the functionality."""
 def main(argv):
+    """Main function to parse the arguments and call the functionality."""
     path = ""
     output = ""
     outtype = ""

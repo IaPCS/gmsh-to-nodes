@@ -43,7 +43,7 @@ class GmshToParticles:
             print("Supported element_type are triangle or quad")
 
         vtk_output = output + ".vtu"
-        self.vtkFile(vtk_output, element_type)
+        self.vtk_file(vtk_output, element_type)
         print(".vtu output file written at", vtk_output)
 
     def center_triangle(self, node):
@@ -77,8 +77,8 @@ class GmshToParticles:
         return np.array(rotatingMatrix.dot(np.array(node)))
 
     # For now renamed function textfile_triangle
-    def textFile_triangle(self, outFile, print_id):
-        with open(outFile, "w") as file:
+    def textFile_triangle(self, out_file, print_id):
+        with open(out_file, "w") as file:
             if print_id:
                 file.write("#id x y vol\n")
             else:
@@ -104,8 +104,8 @@ class GmshToParticles:
             file.close()
 
     # For now renamed function textfile_square
-    def textFile_square(self, outFile, print_id):
-        with open(outFile, "w") as file:
+    def textFile_square(self, out_file, print_id):
+        with open(out_file, "w") as file:
             if print_id:
                 file.write("#id x y vol\n")
             else:
@@ -131,7 +131,7 @@ class GmshToParticles:
             file.close()
 
     # needs to be rewritten for square and triangle
-    def vtkFile(self, outFile, type_):
+    def vtk_file(self, out_file, type_):
         number = 0
         nodes = []
         for cell in self.cells:
@@ -140,12 +140,12 @@ class GmshToParticles:
                 nodes = cell.data
 
         writer = vtk.vtkXMLUnstructuredGridWriter()
-        writer.SetFileName(outFile)
+        writer.SetFileName(out_file)
         grid = vtk.vtkUnstructuredGrid()
         points = vtk.vtkPoints()
         points.SetNumberOfPoints(number)
         points.SetDataTypeToDouble()
-        dataOut = grid.GetPointData()
+        data_out = grid.GetPointData()
 
         array = vtk.vtkDoubleArray()
         array.SetName("Volume")
@@ -168,7 +168,7 @@ class GmshToParticles:
                 array.SetTuple1(i, area)
 
         grid.SetPoints(points)
-        dataOut.AddArray(array)
+        data_out.AddArray(array)
 
         writer.SetInputData(grid)
 

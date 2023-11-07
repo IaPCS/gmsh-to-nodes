@@ -17,7 +17,7 @@ def main(argv):
         sys.exit(1)
 
     try:
-        opts, args = getopt.getopt(argv, "hi:o:t:n:d:r:", ["ifile=", "ofile="])
+        opts, _args = getopt.getopt(argv, "hi:o:t:n:d:r:", ["ifile=", "ofile="])
     except getopt.GetoptError:
         print(help_text)
         sys.exit(0)

@@ -8,6 +8,8 @@ def main(argv):
     output = ''
     outtype = ''
     norm = 0
+    print_id = True
+    rotate = 0
     helpText = "convert.py -i <inputfile> -o <outputfile> -t <type>\n"
     if len(sys.argv) <= 4:
         print(helpText)
@@ -15,7 +17,7 @@ def main(argv):
 
     try:
         opts, args = getopt.getopt(
-            argv, "hi:o:t:n:", ["ifile=", "ofile="])
+        argv, "hi:o:t:n:d:r:", ["ifile=", "ofile="])
     except getopt.GetoptError:
         print(helpText)
         sys.exit(0)
@@ -31,10 +33,14 @@ def main(argv):
         elif opt in ("-t", "--type"):
             outtype = arg
         elif opt in ("-n", "--normalize"):
-            norm = int(arg) 
+            norm = int(arg)
+        elif opt in ("-d", "`--print_id"):
+            print_id = int(arg)
+        elif opt in ("-r", "`--rotate"):
+            rotate = float(arg)
                
                
-    mesh.GmshToParticles(outtype, path, output,norm)
+    mesh.GmshToParticles(outtype, path, output, print_id, norm, rotate)
 
 if __name__ == "__main__":
     main(sys.argv[1:])    

@@ -6,25 +6,33 @@ Generates nodes and volumes from gmsh grid for nodal or particle simulations
 
 ### Requirements
 
-``sudo pip install -r requirements.txt`
+``sudo pip3 install -r requirements.txt`
 
 ### Development
 
 Any changes made in the source file will immediately be changed in the installed package:
 
-`sudo python setup.py develop`
+`sudo python3 setup.py develop`
 
 ### Production
 
-`sudo python setup.py install`
+`sudo python3 setup.py install`
 
 # Usage
 
 ### Standalone 
 
 ```bash
-python convert.py -i <inputfile> -o <outputfile> -t <type>
+python3 convert.py -i <inputfile> -o <outputfile> -t <type> -d <index> -r <rotation>
 ```
+
+Parameters:
+
+* `-i` : Path to the mesh file
+* `-o` : Path to the output file (Do not add any file extension)
+* `-t` : Type of the mesh elements (Only quad and triangles are supported)
+* `-d` : Add the index of each node to the CSV output (Default is True)
+* '-r' : Rotate the nodes by the given degress (Default is zero degrees)
 
 # Examples
 

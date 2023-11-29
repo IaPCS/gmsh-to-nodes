@@ -10,7 +10,8 @@ import vtk
 
 class GmshToParticles():
     
-    def __init__(self, element_type = 'triangle', mesh_input = 'input.msh', output = 'output',norm=0):
+    def __init__(self, element_type = 'triangle', mesh_input = 'input.msh', output = 'output', print_id = True, norm=0, angle=0):
+        self.angle = angle
         mesh = meshio.read(mesh_input)
         self.points = mesh.points
         self.cells = mesh.cells
@@ -25,11 +26,11 @@ class GmshToParticles():
         
         if element_type == "triangle":
             csv_output = output + ".csv"
-            self.textFile_triangle(csv_output)
+            self.textFile_triangle(csv_output, print_id)
             print(".csv output file written at", csv_output)  
         elif element_type == "quad":
             csv_output = output + ".csv"
-            self.textFile_square(csv_output)
+            self.textFile_square(csv_output, print_id)
             print (".csv output file written at", csv_output)  
         else:
             print ("Supported element_type are triangle or quad")
@@ -62,33 +63,54 @@ class GmshToParticles():
         a = self.points[node[1]] - self.points[node[0]]
         b = self.points[node[2]] - self.points[node[0]]
         return np.linalg.norm(a*b)
-    
+   
+    def rotate(self,node):
+        rad = self.angle * np.pi / 180
+        rotatingMatrix = np.array([[np.cos(rad),-np.sin(rad)],[np.sin(rad),np.cos(rad)]])
+        return np.array(rotatingMatrix.dot(np.array(node)))
+
     #For now renamed function textfile_triangle
-    def textFile_triangle(self, outFile):
+    def textFile_triangle(self, outFile, print_id):
         with open(outFile, "w") as file:
-            file.write("#id x y vol\n")
+            if print_id:
+                file.write("#id x y vol\n")
+            else:
+                file.write("#x y vol\n")
             i = 0
             for cell in self.cells:
                 if cell.type == "triangle":
-                    for node in self.cells['triangle']:
+                    for node in cell.data:
                         area = self.areaTriangle(node)
                         center = self.centerTriangle(node)
-                        line = "{:d}, {:.2e}, {:.2e}, {:.2e}".format(i ,center[0], center[1], area )
+                        center = self.rotate(center)
+                        
+                        if print_id:
+                            line = "{:d}, {:.2e}, {:.2e}, {:.2e}".format(i ,center[0], center[1], area )
+                        else:
+                            line = "{:.2e}, {:.2e}, {:.2e}".format(center[0], center[1], area )
                         file.write(line + os.linesep)
                         i += 1
-                file.close()
+            file.close()
             
     #For now renamed function textfile_square
-    def textFile_square(self, outFile):
+    def textFile_square(self, outFile, print_id):
         with open(outFile, "w") as file:
-            file.write("#id x y vol\n")
+            if print_id:
+                file.write("#id x y vol\n")
+            else:
+                file.write("#x y vol\n")
             i = 0
             for cell in self.cells:
                 if cell.type == "quad":
                     for node in cell.data:
                         area = self.areaSquare(node)
                         center = self.centerSquare(node)
-                        line = "{:d}, {:.2e}, {:.2e}, {:.2e}".format(i ,center[0], center[1], area )
+                        center = self.rotate(center)
+                        
+                        if print_id:
+                            line = "{:d}, {:.2e}, {:.2e}, {:.2e}".format(i ,center[0], center[1], area )
+                        else:
+                            line = "{:.2e}, {:.2e}, {:.2e}".format(center[0], center[1], area )
                         file.write(line + os.linesep)
                         i += 1
             file.close()
@@ -118,12 +140,14 @@ class GmshToParticles():
         if type_ == "triangle":
             for i in range (0,len(nodes)):
                 center = self.centerTriangle(nodes[i])
-                area = self.areaTriangle(node[i])
+                center = self.rotate(center)
+                area = self.areaTriangle(nodes[i])
                 points.InsertPoint(i,center[0],center[1],0)
                 array.SetTuple1(i,area)
         elif type_ == "quad":
             for i in range (0,len(nodes)):
                 center = self.centerSquare(nodes[i])
+                center = self.rotate(center)
                 area = self.areaSquare(nodes[i])
                 points.InsertPoint(i,center[0],center[1],0)
                 array.SetTuple1(i,area)

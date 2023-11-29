@@ -33,12 +33,12 @@ class GmshToParticles():
             csv_output = output + ".csv"
             self.textFile_square(csv_output, print_id)
             print (".csv output file written at", csv_output)  
-        elif element_type == "thetrahedon":
+        elif element_type == "tetra":
             csv_output = output + ".csv" 
             self.textfile_thetrahedon(csv_output, print_id)
             print (".csv output file written at", csv_output)   
         else:
-            print ("Supported element_type are triangle or quad")
+            print ("Supported element_type are triangle or quad or tetra")
          
             
         vtk_output = output + ".vtu"
@@ -70,6 +70,12 @@ class GmshToParticles():
         a = self.points[node[1]] - self.points[node[0]]
         b = self.points[node[2]] - self.points[node[0]]
         return np.linalg.norm(a*b)
+    
+    def volumeTetra(self, node):
+        a = self.points[node[1]] - self.points[node[0]]
+        b = self.points[node[2]] - self.points[node[0]]
+        c = self.points[node[3]] - self.points[node[0]] 
+        return 1/6 * np.linalg.norm(np.cross(a,b).dot(c))
    
     def rotate(self,node):
         rad = self.angle * np.pi / 180
@@ -145,7 +151,7 @@ class GmshToParticles():
                     for node in cell.data:
                         center = self.centerSquare(node)
                         center = self.rotate3d(center)
-                        volume = 1
+                        volume = self.volumeTetra(node)
                         if print_id:
                             line = "{:d}, {:.2e}, {:.2e}, {:.2e}, {:.2e}".format(i ,center[0], center[1], center[2], volume )
                         else:
@@ -192,8 +198,14 @@ class GmshToParticles():
                 area = self.areaSquare(nodes[i])
                 points.InsertPoint(i,center[0],center[1],0)
                 array.SetTuple1(i,area)
+        elif type_ == "tetra":
+            for i in range (0,len(nodes)): 
+                center = self.centerSquare(nodes[i])
+                center = self.rotate3d(center)
+                volume = self.volumeTetra(nodes[i])
+                points.InsertPoint(i,center[0],center[1],center[2])
+                array.SetTuple1(i,volume)
 
-       
         grid.SetPoints(points)
         dataOut.AddArray(array)
        

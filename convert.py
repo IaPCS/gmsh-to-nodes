@@ -1,30 +1,30 @@
-import gmshtoparticles.mesh as mesh
+"""This module converts msh file to vtu and csv files."""
 import sys
 import getopt
+from gmshtoparticles import mesh
 
 def main(argv):
-        
-    path = ''
-    output = ''
-    outtype = ''
+    """Main function to parse the arguments and call the functionality."""
+    path = ""
+    output = ""
+    outtype = ""
     norm = 0
     print_id = True
     rotate = 0
-    helpText = "convert.py -i <inputfile> -o <outputfile> -t <type>\n"
+    help_text = "convert.py -i <inputfile> -o <outputfile> -t <type>\n"
     if len(sys.argv) <= 4:
-        print(helpText)
+        print(help_text)
         sys.exit(1)
 
     try:
-        opts, args = getopt.getopt(
-        argv, "hi:o:t:n:d:r:", ["ifile=", "ofile="])
+        opts, _args = getopt.getopt(argv, "hi:o:t:n:d:r:", ["ifile=", "ofile="])
     except getopt.GetoptError:
-        print(helpText)
+        print(help_text)
         sys.exit(0)
 
     for opt, arg in opts:
-        if opt == '-h':
-            print (helpText)
+        if opt == "-h":
+            print(help_text)
             sys.exit(0)
         elif opt in ("-i", "--ifile"):
             path = arg
@@ -38,9 +38,8 @@ def main(argv):
             print_id = int(arg)
         elif opt in ("-r", "`--rotate"):
             rotate = float(arg)
-               
-               
+
     mesh.GmshToParticles(outtype, path, output, print_id, norm, rotate)
 
 if __name__ == "__main__":
-    main(sys.argv[1:])    
+    main(sys.argv[1:])
